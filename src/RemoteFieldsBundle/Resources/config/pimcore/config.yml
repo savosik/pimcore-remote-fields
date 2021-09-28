@@ -1,0 +1,7 @@
+pimcore:
+  objects:
+    class_definitions:
+      data:
+        map:
+          RemoteSelect: Savosik\RemoteFieldsBundle\Model\Object\Data\RemoteSelect
+          RemoteMultiSelect: Savosik\RemoteFieldsBundle\Model\Object\Data\RemoteMultiSelect

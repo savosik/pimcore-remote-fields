@@ -1,0 +1,4 @@
+
+_remotefields_admin_controller:
+  resource: "@RemoteFieldsBundle/Controller/Admin/"
+  type:     annotation
