@@ -1,0 +1,32 @@
+{
+  "name": "savosik/pimcore-remote-fields",
+  "type": "pimcore-bundle",
+  "description": "Add custom Select and Multiselect fields providing remote data",
+  "minimum-stability": "dev",
+  "version": "1.0",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "triputvp",
+      "email": "slava.triput@gmail.com"
+    }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "7.2"
+  },
+  "require-dev": {
+    "pimcore/pimcore": "10.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Savosik\\RemoteFieldsBundle\\": "src/RemoteFieldsBundle"
+    }
+  },
+  "extra": {
+    "pimcore": {
+      "bundles": [
+        "Savosik\\RemoteFieldsBundle\\RemoteFieldsBundle"
+      ]
+    }
+  }
+}
