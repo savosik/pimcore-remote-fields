@@ -43,7 +43,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             displayField: 'key',
             valueField: 'value',
             labelWidth: 100,
-            value: this.data.value,
+            value: this.data,
             autoLoadOnValue: false
         };
 
