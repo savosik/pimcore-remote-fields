@@ -22,7 +22,7 @@ class RemoteFieldsBundle extends AbstractPimcoreBundle {
 
     public function getDescription()
     {
-        return 'to provide ajax remote select field and multiselect field';
+        return 'To provide ajax remote select field and multiselect field';
     }
 
     public function getJsPaths() {
