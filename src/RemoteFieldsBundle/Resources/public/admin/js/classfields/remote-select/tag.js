@@ -29,6 +29,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             autoLoad: true
         });
 
+
         var options = {
             name: this.fieldConfig.name,
             triggerAction: "all",
