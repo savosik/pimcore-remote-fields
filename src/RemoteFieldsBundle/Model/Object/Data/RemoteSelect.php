@@ -15,6 +15,7 @@ class RemoteSelect extends Select{
         return $this->remoteStorage;
     }
 
+
     public function setRemoteStorage($remoteStorage){
         $this->remoteStorage = $remoteStorage;
         return $this;
