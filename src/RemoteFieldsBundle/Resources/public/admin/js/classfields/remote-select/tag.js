@@ -6,9 +6,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     initialize: function (data, fieldConfig) {
         this.data = data;
         this.fieldConfig = fieldConfig;
-
-        console.log(data);
-        console.log(fieldConfig);
     },
 
     getLayoutEdit: function () {
@@ -16,14 +13,17 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         var store = new Ext.data.JsonStore({
             proxy: {
                 type: 'ajax',
-                url: this.fieldConfig.remoteStorageUrl,
+                url: '/admin/remote-fields/store-data',
+                extraParams : {
+                    "url" : this.fieldConfig.remoteStorageUrl
+                },
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
                 }
             },
             fields: ["key", "value"],
-            autoLoad: true
+            autoLoad: false
         });
 
         var options = {
