@@ -3,5 +3,5 @@ pimcore:
     class_definitions:
       data:
         map:
-          RemoteSelect: Savosik\RemoteFieldsBundle\Model\Object\Data\RemoteSelect
-          RemoteMultiSelect: Savosik\RemoteFieldsBundle\Model\Object\Data\RemoteMultiSelect
+          remoteSelect: Savosik\RemoteFieldsBundle\Model\Object\Data\RemoteSelect
+          remoteMultiSelect: Savosik\RemoteFieldsBundle\Model\Object\Data\RemoteMultiSelect

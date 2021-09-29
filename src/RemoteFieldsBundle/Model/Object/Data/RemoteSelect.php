@@ -1,6 +1,6 @@
 <?php
-
 namespace Savosik\RemoteFieldsBundle\Model\Object\Data;
+
 use Pimcore\Model\DataObject\ClassDefinition;
 use Pimcore\Logger;
 
@@ -10,7 +10,7 @@ class RemoteSelect extends ClassDefinition\Data\Select{
         Logger::debug($this->fieldtype);
     }
 
-    public $fieldtype = "RemoteSelect";
+    public $fieldtype = "remoteSelect";
 
     public $remoteStorageUrl = null;
 
