@@ -1,23 +1,22 @@
 <?php
 
 namespace Savosik\RemoteFieldsBundle\Model\Object\Data;
-use Pimcore\Model\DataObject\ClassDefinition\Data\Select;
+use Pimcore\Model\DataObject\ClassDefinition;
 
 
-class RemoteSelect extends Select{
+class RemoteSelect extends ClassDefinition\Data\Select{
 
     public $fieldtype = "RemoteSelect";
 
-    public $remoteStorage = null;
+    public $remoteStorageUrl = null;
 
 
-    public function getRemoteStorage(){
-        return $this->remoteStorage;
+    public function getRemoteStorageUrl(){
+        return $this->remoteStorageUrl;
     }
 
-
-    public function setRemoteStorage($remoteStorage){
-        $this->remoteStorage = $remoteStorage;
+    public function setRemoteStorageUrl($remoteStorageUrl){
+        $this->remoteStorageUrl = $remoteStorageUrl;
         return $this;
     }
 }

@@ -71,8 +71,8 @@ pimcore.object.classes.data.remoteSelect = Class.create(pimcore.object.classes.d
                 valueField: 'url',
                 editable: true,
                 displayField: 'name',
-                fieldLabel: t('remote_storage'),
-                name: 'remoteStorage',
+                fieldLabel: t('remote_storage_url'),
+                name: 'remoteStorageUrl',
                 value: datax.remoteStorageUrl,
                 forceSelection:true
             })
