@@ -26,8 +26,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                     rootProperty: 'data'
                 }
             },
-            fields: ["key", "value"],
-            autoLoad: false
+            fields: ["key", "value"]
         });
 
 
@@ -37,7 +36,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             editable: true,
             anyMatch: true,
             autoComplete: true,
-            forceSelection: true,
             selectOnFocus: true,
             fieldLabel: this.fieldConfig.title,
             store: store,
@@ -45,8 +43,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             displayField: 'key',
             valueField: 'value',
             labelWidth: 100,
-            value: this.data,
-            autoLoadOnValue: false
+            value: this.data
         };
 
         //some styles
