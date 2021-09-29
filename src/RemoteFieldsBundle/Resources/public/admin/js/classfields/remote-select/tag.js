@@ -6,6 +6,9 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     initialize: function (data, fieldConfig) {
         this.data = data;
         this.fieldConfig = fieldConfig;
+
+        console.log(data);
+        console.log(fieldConfig);
     },
 
     getLayoutEdit: function () {
@@ -39,7 +42,9 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             width: 250,
             displayField: 'key',
             valueField: 'value',
-            labelWidth: 100
+            labelWidth: 100,
+            value: this.data.value,
+            autoLoadOnValue: false
         };
 
         //some styles
