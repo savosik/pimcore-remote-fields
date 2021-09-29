@@ -2,14 +2,18 @@ pimcore.registerNS("pimcore.object.tags.remoteSelect");
 pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
     type: "remoteSelect",
+    dataChanged: false,
 
     initialize: function (data, fieldConfig) {
-        this.data = data;
+        if (data) {
+            this.data = data;
+        }
+
         this.fieldConfig = fieldConfig;
+        this.mode = 'remote';
 
         console.log(data);
         console.log(fieldConfig);
-
     },
 
     getLayoutEdit: function () {
@@ -26,7 +30,8 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                     rootProperty: 'data'
                 }
             },
-            fields: ["key", "value"]
+            fields: ["key", "value"],
+            autoLoad: false
         });
 
 
@@ -36,6 +41,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             editable: true,
             anyMatch: true,
             autoComplete: true,
+            forceSelection: true,
             selectOnFocus: true,
             fieldLabel: this.fieldConfig.title,
             store: store,
@@ -43,7 +49,14 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             displayField: 'key',
             valueField: 'value',
             labelWidth: 100,
-            value: this.data
+            value: this.data,
+            queryMode: 'remote',
+            listeners: {
+                select: function (el) {
+                    console.log("remoteSelect changed");
+                    this.dataChanged = true;
+                }.bind(this)
+            }
         };
 
         //some styles
@@ -80,6 +93,16 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
     getName: function () {
         return this.fieldConfig.name;
+    },
+
+    isDirty:function () {
+        if (this.component) {
+            if (!this.component.rendered) {
+                return false;
+            } else {
+                return this.dataChanged;
+            }
+        }
     }
 
 });
