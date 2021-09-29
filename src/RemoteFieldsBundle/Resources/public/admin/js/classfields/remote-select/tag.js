@@ -10,7 +10,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         }
 
         this.fieldConfig = fieldConfig;
-        this.mode = 'remote';
 
         console.log(data);
         console.log(fieldConfig);
