@@ -9,6 +9,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
         console.log(data);
         console.log(fieldConfig);
+
     },
 
     getLayoutEdit: function () {
