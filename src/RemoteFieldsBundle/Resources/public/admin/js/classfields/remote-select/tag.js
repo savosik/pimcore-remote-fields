@@ -7,6 +7,11 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
         if (data) {
             this.data = JSON.parse(data);
+        }else{
+            this.data = {
+                key   : t('empty'),
+                value : ''
+            }
         }
 
         this.fieldConfig = fieldConfig;
@@ -54,7 +59,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             displayField: 'key',
             valueField: 'value',
 
-            value: this.data.value || ""
+            value: this.data.value
         };
 
         //resolve default system settings
@@ -75,7 +80,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         this.component = new Ext.form.ComboBox(options);
 
         // set value from backend without unnecessary store loading
-        this.component.setRawValue(this.data.key || t('empty'));
+        this.component.setRawValue(this.data.key);
 
         return this.component;
     },
