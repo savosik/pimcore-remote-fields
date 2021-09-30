@@ -113,11 +113,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             return this.component.getValue();
         }
         return this.data;
-    },
-
-    getGridColumnConfig:function (field) {
-       console.log('getGridColumnConfig');
-       console.log(field);
-    },
+    }
 
 });
