@@ -121,6 +121,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             // trying to save json string as key-value data
             return JSON.stringify(valueToSave);
         }
+
         return this.data;
     }
 
