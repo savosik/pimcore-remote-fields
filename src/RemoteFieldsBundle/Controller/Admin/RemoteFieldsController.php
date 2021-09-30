@@ -15,21 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class RemoteFieldsController extends AdminController{
 
     /**
-     * @Route("/stores-list")
-     */
-    public function storesListAction(Request $request){
-        $list = [
-            ["url" => "/test_url0", "name" => "test name0"],
-            ["url" => "/test_url1", "name" => "test name1"],
-            ["url" => "/test_url2", "name" => "test name2"],
-            ["url" => "/test_url3", "name" => "test name3"],
-        ];
-
-        return $this->adminJson(['stores' => $list]);
-    }
-
-
-    /**
      * @Route("/store-data")
      */
     public function storeDataAction(Request $request){

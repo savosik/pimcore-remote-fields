@@ -48,8 +48,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             name: this.fieldConfig.name,
             fieldLabel: this.fieldConfig.title,
 
-            componentCls: this.getWrapperClassNames(),
-
             width: 250,
             labelWidth: 100,
 
@@ -64,6 +62,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
             store: store,
             queryMode: 'remote',
+
             displayField: 'key',
             valueField: 'value',
 
