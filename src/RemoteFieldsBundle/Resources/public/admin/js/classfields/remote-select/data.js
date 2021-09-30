@@ -53,7 +53,7 @@ pimcore.object.classes.data.remoteSelect = Class.create(pimcore.object.classes.d
                 fieldLabel: t("options_provider_class"),
                 width: 600,
                 name: "remoteStorageUrl",
-                value: datax.remoteStorageUrl
+                value: this.datax.remoteStorageUrl
             }
         ]);
 
