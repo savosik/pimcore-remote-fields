@@ -33,7 +33,12 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 }
             },
             fields: ["key", "value"],
-            autoLoad: false
+            autoLoad: false,
+            listeners: {
+                load: function (el){
+                    console.log("store 'store' is loaded")
+                }.bind(this)
+            }
         });
 
 
@@ -57,7 +62,10 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 select: function (el) {
                     console.log("remoteSelect changed");
                     this.dataChanged = true;
-                }.bind(this)
+                }.bind(this),
+                load: function (el){
+                    console.log("combo is loaded");
+                }
             }
         };
 
