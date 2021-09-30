@@ -18,6 +18,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     getLayoutEdit: function () {
 
         console.log('getLayoutEdit');
+        console.log(this);
 
         var store = new Ext.data.JsonStore({
             proxy: {
