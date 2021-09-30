@@ -11,7 +11,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
         this.fieldConfig = fieldConfig;
         console.log('ver 10:45');
-
         console.log('initialize');
         console.log(data);
         console.log(fieldConfig);
