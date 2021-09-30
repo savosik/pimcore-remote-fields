@@ -5,8 +5,8 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
     initialize: function (data, fieldConfig) {
 
-        this.jsondata.key = null;
-        this.jsondata.value = null;
+        this.jsondata.key = '';
+        this.jsondata.value = '';
 
         if (data) {
             this.data = data;
@@ -14,17 +14,10 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         }
 
         this.fieldConfig = fieldConfig;
-        console.log('ver 12:29');
-        console.log('initialize');
-        console.log(data);
-        console.log(this.jsondata);
-        console.log(fieldConfig);
     },
 
-    getLayoutEdit: function () {
 
-        console.log('getLayoutEdit');
-        console.log(this);
+    getLayoutEdit: function () {
 
         var store = new Ext.data.JsonStore({
             proxy: {
@@ -39,15 +32,8 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 }
             },
             fields: ["key", "value"],
-            autoLoad: false,
-            listeners: {
-                load: function (el){
-                    console.log("store 'store' is loaded")
-                }.bind(this)
-            }
+            autoLoad: false
         });
-
-        console.log(this.data);
 
         // main option
         var options = {
@@ -119,7 +105,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
             var valueToSave = null;
 
-            if(this.component.getRawValue() && this.component.getValue()){
+            if(this.component.getRawValue() !== '' && this.component.getValue() !== ''){
                 valueToSave = {
                     key   : this.component.getRawValue(),
                     value : this.component.getValue()
