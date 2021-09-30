@@ -6,9 +6,6 @@ use Pimcore\Logger;
 
 class RemoteSelect extends ClassDefinition\Data\Select{
 
-    public function __construct(){
-        Logger::debug($this->fieldtype);
-    }
 
     public $fieldtype = "remoteSelect";
 
