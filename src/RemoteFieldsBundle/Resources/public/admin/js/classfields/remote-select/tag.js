@@ -2,7 +2,6 @@ pimcore.registerNS("pimcore.object.tags.remoteSelect");
 pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
     type: "remoteSelect",
-    dataChanged: false,
 
     initialize: function (data, fieldConfig) {
         if (data) {
@@ -10,7 +9,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         }
 
         this.fieldConfig = fieldConfig;
-        console.log('ver 11:28');
+        console.log('ver 12:29');
         console.log('initialize');
         console.log(data);
         console.log(fieldConfig);
@@ -43,31 +42,32 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
         console.log(this.data);
 
+        // main option
         var options = {
             name: this.fieldConfig.name,
+            fieldLabel: this.fieldConfig.title,
+
+            width: 250,
+            labelWidth: 100,
+
             triggerAction: "all",
             editable: true,
             anyMatch: true,
+
             autoComplete: true,
             forceSelection: true,
             selectOnFocus: true,
-            fieldLabel: this.fieldConfig.title,
+            typeAhead: true,
+
             store: store,
-            width: 250,
+            queryMode: 'remote',
             displayField: 'key',
             valueField: 'value',
-            labelWidth: 100,
-            value: this.data,
-            queryMode: 'remote',
-            listeners: {
-                select: function (el) {
-                    console.log("remoteSelect changed");
-                    this.dataChanged = true;
-                }.bind(this)
-            }
+
+            value: this.data
         };
 
-        //some styles
+        //resolve default system settings
         if (this.fieldConfig.labelWidth) {
             options.labelWidth = this.fieldConfig.labelWidth;
         }
@@ -81,8 +81,10 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             options.width = this.sumWidths(options.width, options.labelWidth);
         }
 
+        //adding component
         this.component = new Ext.form.ComboBox(options);
 
+        // set value from backend without unnecessary store loading
         this.component.setRawValue(this.data);
 
         return this.component;
@@ -95,31 +97,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         this.component = this.getLayoutEdit();
         this.component.setReadOnly(true);
         return this.component;
-    },
-
-    getValue:function () {
-
-        console.log('getValue');
-        if (this.isRendered()) {
-            return this.component.getValue();
-        }
-        return this.data;
-    },
-
-    getName: function () {
-        console.log('getName');
-        return this.fieldConfig.name;
-    },
-
-    isDirty:function () {
-        console.log('isDirty');
-        if (this.component) {
-            if (!this.component.rendered) {
-                return false;
-            } else {
-                return this.dataChanged;
-            }
-        }
     }
 
 });

@@ -16,72 +16,54 @@ pimcore.object.classes.data.remoteSelect = Class.create(pimcore.object.classes.d
     },
 
     initialize: function (treeNode, initData) {
+        console.log('initialize');
         this.type = "remoteSelect";
 
         this.initData(initData);
 
         this.treeNode = treeNode;
         this.id = this.type + "_" + treeNode.id;
-
-        this.store = new Ext.data.JsonStore({
-            proxy: {
-                type: 'ajax',
-                url: '/admin/remote-fields/stores-list',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'stores'
-                }
-            },
-            fields: ["url", "name"],
-            autoLoad: true
-        });
-
     },
 
     getTypeName: function () {
+        console.log('getTypeName');
         return t("remoteSelect");
     },
 
     getGroup: function () {
+        console.log('getGroup');
         return "select";
     },
 
     getIconClass: function () {
+        console.log('getIconClass');
         return "pimcore_icon_select";
     },
 
     getLayout: function ($super) {
+        console.log('getLayout');
+
         $super();
 
         this.specificPanel.removeAll();
-        var specificItems = this.getSpecificPanelItems(this.datax, false);
-        this.specificPanel.add(specificItems);
+
+        this.specificPanel.add([
+            {
+                xtype: "textfield",
+                fieldLabel: t("options_provider_class"),
+                width: 600,
+                name: "remoteStorageUrl",
+                value: datax.remoteStorageUrl
+            }
+        ]);
 
         return this.layout;
     },
 
-    getSpecificPanelItems: function (datax, inEncryptedField) {
-        return [
-            new Ext.form.ComboBox({
-                typeAhead: true,
-                typeAheadDelay: 200,
-                triggerAction: 'all',
-                width: 600,
-                store: this.store,
-                valueField: 'url',
-                editable: true,
-                displayField: 'name',
-                fieldLabel: t('remote_storage_url'),
-                name: 'remoteStorageUrl',
-                value: datax.remoteStorageUrl,
-                forceSelection:true,
-                autoLoadOnValue: false
-            })
-        ]
-    },
-
 
     applySpecialData: function (source) {
+        console.log('applySpecialData');
+
         if (source.datax) {
             if (!this.datax) {
                 this.datax = {};
