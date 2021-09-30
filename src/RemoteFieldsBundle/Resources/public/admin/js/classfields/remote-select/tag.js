@@ -110,7 +110,16 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         console.log('getValue');
 
         if (this.isRendered()) {
-            return this.component.getValue();
+
+            var valueToSave = {
+                key   : this.component.getDisplayField(),
+                value : this.component.getValue()
+            }
+
+            console.log(valueToSave);
+
+            // trying to save json string as key-value data
+            return valueToSave;
         }
         return this.data;
     }
