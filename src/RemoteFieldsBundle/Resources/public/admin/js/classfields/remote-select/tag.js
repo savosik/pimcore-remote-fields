@@ -9,7 +9,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             this.data = JSON.parse(data);
         }else{
             this.data = {
-                key   : t('empty'),
+                key   : '',
                 value : ''
             }
         }
