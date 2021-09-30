@@ -112,7 +112,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         if (this.isRendered()) {
 
             var valueToSave = {
-                key   : this.component.getDisplayField(),
+                key   : this.component.getRawValue(),
                 value : this.component.getValue()
             }
 
