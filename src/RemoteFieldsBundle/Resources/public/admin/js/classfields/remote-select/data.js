@@ -50,7 +50,7 @@ pimcore.object.classes.data.remoteSelect = Class.create(pimcore.object.classes.d
         this.specificPanel.add([
             {
                 xtype: "textfield",
-                fieldLabel: t("options_provider_class"),
+                fieldLabel: t("remote_storage_url"),
                 width: 600,
                 name: "remoteStorageUrl",
                 value: this.datax.remoteStorageUrl
