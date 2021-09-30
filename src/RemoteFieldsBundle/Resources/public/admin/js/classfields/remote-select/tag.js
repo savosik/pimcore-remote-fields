@@ -60,15 +60,9 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             value: this.data,
             queryMode: 'remote',
             listeners: {
-
                 select: function (el) {
                     console.log("remoteSelect changed");
                     this.dataChanged = true;
-                }.bind(this),
-
-                load: function (el){
-                    console.log("combo is loaded");
-                    this.component.setRawValue(this.data);
                 }.bind(this)
             }
         };
@@ -89,6 +83,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
         this.component = new Ext.form.ComboBox(options);
 
+        this.component.setRawValue(this.data);
 
         return this.component;
     },
