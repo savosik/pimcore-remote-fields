@@ -54,7 +54,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             displayField: 'key',
             valueField: 'value',
 
-            value: this.data.value
+            value: this.data.value || ""
         };
 
         //resolve default system settings
@@ -75,7 +75,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         this.component = new Ext.form.ComboBox(options);
 
         // set value from backend without unnecessary store loading
-        this.component.setRawValue(this.data.key);
+        this.component.setRawValue(this.data.key || t('empty'));
 
         return this.component;
     },
@@ -101,7 +101,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
             var valueToSave = null;
 
-            if(this.component.getRawValue() && this.component.getValue()){
+            if(this.component.getRawValue() !== "" && this.component.getValue() !== ""){
                 valueToSave = {
                     key   : this.component.getRawValue(),
                     value : this.component.getValue()
