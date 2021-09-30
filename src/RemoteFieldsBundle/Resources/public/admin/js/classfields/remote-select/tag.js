@@ -47,6 +47,8 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             name: this.fieldConfig.name,
             fieldLabel: this.fieldConfig.title,
 
+            componentCls: this.getWrapperClassNames(),
+
             width: 250,
             labelWidth: 100,
 
@@ -110,6 +112,11 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             return this.component.getValue();
         }
         return this.data;
-    }
+    },
+
+    getGridColumnConfig:function (field) {
+       console.log('getGridColumnConfig');
+       console.log(field);
+    },
 
 });
