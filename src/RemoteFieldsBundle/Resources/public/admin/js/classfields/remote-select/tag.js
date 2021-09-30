@@ -4,6 +4,10 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     type: "remoteSelect",
 
     initialize: function (data, fieldConfig) {
+
+        this.jsondata.key = null;
+        this.jsondata.value = null;
+
         if (data) {
             this.data = data;
             this.jsondata = JSON.parse(data);
@@ -13,6 +17,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         console.log('ver 12:29');
         console.log('initialize');
         console.log(data);
+        console.log(this.jsondata);
         console.log(fieldConfig);
     },
 
@@ -67,7 +72,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             displayField: 'key',
             valueField: 'value',
 
-            value: this.jsondata.key
+            value: this.jsondata.value
         };
 
         //resolve default system settings
@@ -88,7 +93,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         this.component = new Ext.form.ComboBox(options);
 
         // set value from backend without unnecessary store loading
-        this.component.setRawValue(this.data);
+        this.component.setRawValue(this.jsondata.key);
 
         return this.component;
     },
@@ -112,15 +117,20 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
         if (this.isRendered()) {
 
-            var valueToSave = {
-                key   : this.component.getRawValue(),
-                value : this.component.getValue()
+            var valueToSave = null;
+
+            if(this.component.getRawValue() && this.component.getValue()){
+                valueToSave = {
+                    key   : this.component.getRawValue(),
+                    value : this.component.getValue()
+                }
+
+                valueToSave =  JSON.stringify(valueToSave);
             }
 
             console.log(valueToSave);
 
-            // trying to save json string as key-value data
-            return JSON.stringify(valueToSave);
+            return  valueToSave;
         }
 
         return this.data;
