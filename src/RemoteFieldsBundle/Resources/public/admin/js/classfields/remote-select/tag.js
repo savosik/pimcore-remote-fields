@@ -97,6 +97,19 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         this.component = this.getLayoutEdit();
         this.component.setReadOnly(true);
         return this.component;
+    },
+
+    getName: function () {
+        console.log('getName');
+        return this.fieldConfig.name;
+    },
+
+    getValue:function () {
+        console.log('getValue');
+        if (this.isRendered()) {
+            return this.component.getValue();
+        }
+        return this.data;
     }
 
 });
