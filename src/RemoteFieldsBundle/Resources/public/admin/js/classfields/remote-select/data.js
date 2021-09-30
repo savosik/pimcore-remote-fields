@@ -16,32 +16,28 @@ pimcore.object.classes.data.remoteSelect = Class.create(pimcore.object.classes.d
     },
 
     initialize: function (treeNode, initData) {
-        console.log('initialize');
+
         this.type = "remoteSelect";
 
         this.initData(initData);
 
         this.treeNode = treeNode;
-        this.id = this.type + "_" + treeNode.id;
+
     },
 
     getTypeName: function () {
-        console.log('getTypeName');
         return t("remoteSelect");
     },
 
     getGroup: function () {
-        console.log('getGroup');
         return "select";
     },
 
     getIconClass: function () {
-        console.log('getIconClass');
         return "pimcore_icon_select";
     },
 
     getLayout: function ($super) {
-        console.log('getLayout');
 
         $super();
 
@@ -61,8 +57,12 @@ pimcore.object.classes.data.remoteSelect = Class.create(pimcore.object.classes.d
     },
 
 
+    applyData: function ($super) {
+        $super();
+    },
+
+
     applySpecialData: function (source) {
-        console.log('applySpecialData');
 
         if (source.datax) {
             if (!this.datax) {

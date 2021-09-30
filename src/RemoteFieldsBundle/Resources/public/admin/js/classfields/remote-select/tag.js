@@ -87,7 +87,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
 
     getLayoutShow: function () {
-        console.log('getLayoutShow');
 
         this.component = this.getLayoutEdit();
         this.component.setReadOnly(true);
@@ -95,12 +94,10 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     },
 
     getName: function () {
-        console.log('getName');
         return this.fieldConfig.name;
     },
 
     getValue:function () {
-        console.log('getValue');
 
         if (this.isRendered()) {
 
@@ -114,8 +111,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
                 valueToSave =  JSON.stringify(valueToSave);
             }
-
-            console.log(valueToSave);
 
             return  valueToSave;
         }
