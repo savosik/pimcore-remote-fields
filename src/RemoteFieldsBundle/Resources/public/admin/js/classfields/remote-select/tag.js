@@ -10,12 +10,16 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         }
 
         this.fieldConfig = fieldConfig;
+        console.log('ver 10:45');
 
+        console.log('initialize');
         console.log(data);
         console.log(fieldConfig);
     },
 
     getLayoutEdit: function () {
+
+        console.log('getLayoutEdit');
 
         var store = new Ext.data.JsonStore({
             proxy: {
@@ -77,13 +81,18 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         return this.component;
     },
 
+
     getLayoutShow: function () {
+        console.log('getLayoutShow');
+
         this.component = this.getLayoutEdit();
         this.component.setReadOnly(true);
         return this.component;
     },
 
     getValue:function () {
+
+        console.log('getValue');
         if (this.isRendered()) {
             return this.component.getValue();
         }
@@ -91,10 +100,12 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     },
 
     getName: function () {
+        console.log('getName');
         return this.fieldConfig.name;
     },
 
     isDirty:function () {
+        console.log('isDirty');
         if (this.component) {
             if (!this.component.rendered) {
                 return false;
