@@ -28,7 +28,7 @@ class RemoteSelect extends ClassDefinition\Data\Select{
         if (isset($params['purpose']) && $params['purpose'] == 'editmode') {
             $result = $data;
         } else {
-            $result = ['value' => "hello world" ?? null, 'options' => ""];
+            $result = $data;
         }
 
         return $result;
