@@ -20,4 +20,17 @@ class RemoteSelect extends ClassDefinition\Data\Select{
         $this->remoteStorageUrl = $remoteStorageUrl;
         return $this;
     }
+
+
+    public function getDataForGrid($data, $object = null, $params = [])
+    {
+
+        if (isset($params['purpose']) && $params['purpose'] == 'editmode') {
+            $result = $data;
+        } else {
+            $result = ['value' => "hello world" ?? null, 'options' => ""];
+        }
+
+        return $data;
+    }
 }
