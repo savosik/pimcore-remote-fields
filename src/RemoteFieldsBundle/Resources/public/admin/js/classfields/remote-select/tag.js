@@ -135,6 +135,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             return null;
         }
 
+
         var value = record.data[key];
         var options = record.data[key +  "%options"];
         options = this.prepareStoreDataAndFilterLabels(options);
