@@ -4,7 +4,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     type: "remoteSelect",
 
     initialize: function (data, fieldConfig) {
-
+        console.log("remoteSelect:initialize");
         if (data) {
             this.data = JSON.parse(data);
         }else{
