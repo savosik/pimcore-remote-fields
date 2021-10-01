@@ -29,7 +29,7 @@ class RemoteSelect extends ClassDefinition\Data\Select{
             $result = $data;
         } else {
             $res_arr = \Safe\json_decode($data);
-            $result = $res_arr['key'];
+            $result = $res_arr->key;
         }
 
         return $result;
