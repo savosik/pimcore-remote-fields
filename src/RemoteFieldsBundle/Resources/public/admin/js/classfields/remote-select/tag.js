@@ -124,58 +124,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
 
 
-    getCellEditor: function (field, record) {
-        console.log('getCellEditor');
-
-        console.log(field);
-        console.log(record);
-
-        var key = field.key;
-
-        if(field.layout.noteditable) {
-            return null;
-        }
-
-
-        var value = record.data[key];
-        var options = record.data[key +  "%options"];
-        options = this.prepareStoreDataAndFilterLabels(options);
-
-        var store = new Ext.data.Store({
-            autoDestroy: true,
-            fields: ['key', 'value'],
-            data: options
-        });
-
-        var editorConfig = {};
-
-        if (field.config) {
-            if (field.config.width) {
-                if (intval(field.config.width) > 10) {
-                    editorConfig.width = field.config.width;
-                }
-            }
-        }
-
-        editorConfig = Object.assign(editorConfig, {
-            store: store,
-            triggerAction: "all",
-            editable: false,
-            mode: "local",
-            valueField: 'value',
-            displayField: 'key',
-            value: value,
-            displayTpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">',
-                '{[Ext.util.Format.stripTags(values.key)]}',
-                '</tpl>'
-            )
-        });
-
-        return new Ext.form.ComboBox(editorConfig);
-    },
-
-
 
 
 
