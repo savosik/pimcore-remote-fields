@@ -31,6 +31,6 @@ class RemoteSelect extends ClassDefinition\Data\Select{
             $result = ['value' => "hello world" ?? null, 'options' => ""];
         }
 
-        return $data;
+        return $result;
     }
 }
