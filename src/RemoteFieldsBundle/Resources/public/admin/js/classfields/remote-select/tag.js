@@ -122,7 +122,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     },
 
 
-    //shows in grid view (list of object in folder)
+
     getCellEditor: function (field, record) {
         console.log('getCellEditor');
 
