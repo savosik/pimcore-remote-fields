@@ -28,8 +28,12 @@ class RemoteSelect extends ClassDefinition\Data\Select{
         if (isset($params['purpose']) && $params['purpose'] == 'editmode') {
             $result = $data;
         } else {
-            $res_arr = \Safe\json_decode($data);
-            $result = $res_arr->key;
+            if(!empty($data)){
+                $res_arr = \Safe\json_decode($data);
+                $result = $res_arr->key;
+            }else{
+                $result = $data;
+            }
         }
 
         return $result;
