@@ -50,6 +50,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
         this.component = this.getLayoutEdit();
         this.component.setReadOnly(true);
+
         return this.component;
     },
 
