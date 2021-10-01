@@ -17,7 +17,43 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         this.fieldConfig = fieldConfig;
     },
 
+    getName: function () {
+        return this.fieldConfig.name;
+    },
 
+    getValue: function () {
+
+        if (this.isRendered()) {
+
+            var valueToSave = null;
+
+            if(this.component.getRawValue() !== "" && this.component.getValue() !== ""){
+                valueToSave = {
+                    key   : this.component.getRawValue(),
+                    value : this.component.getValue()
+                }
+
+                valueToSave =  JSON.stringify(valueToSave);
+            }
+
+            return  valueToSave;
+        }
+
+        return this.data;
+    },
+
+
+    // next render component for different layouts
+
+    getLayoutShow: function () {
+        console.log("remoteSelect:getLayoutShow");
+
+        this.component = this.getLayoutEdit();
+        this.component.setReadOnly(true);
+        return this.component;
+    },
+
+    //shows when user opens data object for editing
     getLayoutEdit: function () {
 
         var store = new Ext.data.JsonStore({
@@ -86,36 +122,61 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     },
 
 
-    getLayoutShow: function () {
+    //shows in grid view (list of object in folder)
+    getCellEditor: function (field, record) {
+        console.log('getCellEditor');
 
-        this.component = this.getLayoutEdit();
-        this.component.setReadOnly(true);
-        return this.component;
-    },
+        console.log(field);
+        console.log(record);
 
-    getName: function () {
-        return this.fieldConfig.name;
-    },
+        var key = field.key;
 
-    getValue:function () {
-
-        if (this.isRendered()) {
-
-            var valueToSave = null;
-
-            if(this.component.getRawValue() !== "" && this.component.getValue() !== ""){
-                valueToSave = {
-                    key   : this.component.getRawValue(),
-                    value : this.component.getValue()
-                }
-
-                valueToSave =  JSON.stringify(valueToSave);
-            }
-
-            return  valueToSave;
+        if(field.layout.noteditable) {
+            return null;
         }
 
-        return this.data;
-    }
+        var value = record.data[key];
+        var options = record.data[key +  "%options"];
+        options = this.prepareStoreDataAndFilterLabels(options);
+
+        var store = new Ext.data.Store({
+            autoDestroy: true,
+            fields: ['key', 'value'],
+            data: options
+        });
+
+        var editorConfig = {};
+
+        if (field.config) {
+            if (field.config.width) {
+                if (intval(field.config.width) > 10) {
+                    editorConfig.width = field.config.width;
+                }
+            }
+        }
+
+        editorConfig = Object.assign(editorConfig, {
+            store: store,
+            triggerAction: "all",
+            editable: false,
+            mode: "local",
+            valueField: 'value',
+            displayField: 'key',
+            value: value,
+            displayTpl: Ext.create('Ext.XTemplate',
+                '<tpl for=".">',
+                '{[Ext.util.Format.stripTags(values.key)]}',
+                '</tpl>'
+            )
+        });
+
+        return new Ext.form.ComboBox(editorConfig);
+    },
+
+
+
+
+
+
 
 });
