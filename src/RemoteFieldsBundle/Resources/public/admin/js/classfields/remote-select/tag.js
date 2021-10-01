@@ -53,6 +53,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         return this.component;
     },
 
+
     //shows when user opens data object for editing
     getLayoutEdit: function () {
 
