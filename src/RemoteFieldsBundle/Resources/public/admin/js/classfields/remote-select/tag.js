@@ -3,70 +3,45 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
     type: "remoteSelect",
 
-    initialize: function (data, fieldConfig) {
-
-        if (data) {
-            try{
-                this.data = JSON.parse(data);
-            }catch (e){
-                this.data = {
-                    key   : data,
-                    value : ''
-                };
-            }
-        }else{
-            this.data = {
-                key   : '',
-                value : ''
-            }
-        }
-
-        this.fieldConfig = fieldConfig;
-    },
-
     getName: function () {
         return this.fieldConfig.name;
     },
 
-    getValue: function () {
-
-        console.log("remote:getValue");
-
-        if (this.isRendered()) {
-
-            var valueToSave = null;
-
-            if(this.component.getRawValue() !== "" && this.component.getValue() !== ""){
-                valueToSave = {
-                    key   : this.component.getRawValue(),
-                    value : this.component.getValue()
-                }
-
-                valueToSave =  JSON.stringify(valueToSave);
-            }
-
-            return  valueToSave;
-        }
-
-        return this.data;
-    },
-
-
-    // next render component for different layouts
-
-    getLayoutShow: function () {
-
-        this.component = this.getLayoutEdit();
-        this.component.setReadOnly(true);
-
-        return this.component;
+    initialize: function (data, fieldConfig) {
+        this.data = data;
+        this.fieldConfig = fieldConfig;
     },
 
 
     //shows when user opens data object for editing
     getLayoutEdit: function () {
 
-        var store = new Ext.data.JsonStore({
+        //we accept only json values from db
+        var dbValueObj = null;
+        try{
+            dbValueObj = JSON.parse(this.data);
+        }catch (e) {}
+
+
+        //set two allowed variants for local storage (empty or data from db)
+        var localData = [];
+
+        if(!this.fieldConfig.mandatory) {
+            localData.push({'key': "(" + t("empty") + ")", 'value': ''});
+        }
+        if(dbValueObj){
+            localData.push(dbValueObj);
+        }
+
+
+        var localStore = Ext.create('Ext.data.Store', {
+            autoDestroy:true,
+            fields: ['value', 'key'],
+            data : localData
+        });
+
+        var remoteStore = new Ext.data.JsonStore({
+            autoDestroy:true,
             proxy: {
                 type: 'ajax',
                 url: '/admin/remote-fields/store-data',
@@ -82,35 +57,41 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             autoLoad: false
         });
 
+
         // main option
         var options = {
             name: this.fieldConfig.name,
             fieldLabel: this.fieldConfig.title,
-
-            width: 250,
-            labelWidth: 100,
-
-            triggerAction: "all",
-            editable: true,
             anyMatch: true,
-
-            autoComplete: true,
             forceSelection: true,
             selectOnFocus: true,
-            typeAhead: true,
-
-            store: store,
-            queryMode: 'remote',
-
             displayField: 'key',
             valueField: 'value',
-
-            value: this.data.value,
-
+            value: dbValueObj.value || null,
             componentCls: "object_field object_field_type_" + this.type,
+
+            queryMode: 'local',
+            store: localStore,
+            listeners:{
+                beforequery: function(qe){
+                    delete qe.combo.lastQuery;
+                },
+                focus: function(element, event, eOpts){
+                    element.queryMode = 'remote';
+                    remoteStore.load();
+                    element.store.add(remoteStore);
+                }
+            },
+            getSubmitValue: function (){
+                var me = this;
+                var key = me.getRawValue();
+                var value = me.getValue();
+
+                return JSON.stringify({key:key,value:value})
+            }
         };
 
-        //resolve default system settings
+        //resolve pimcore default settings
         if (this.fieldConfig.labelWidth) {
             options.labelWidth = this.fieldConfig.labelWidth;
         }
@@ -124,15 +105,26 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             options.width = this.sumWidths(options.width, options.labelWidth);
         }
 
-        //adding component
-        this.component = new Ext.form.ComboBox(options);
+        return new Ext.form.ComboBox(options);
+    },
 
-        // set value from backend without unnecessary store loading
-        this.component.setRawValue(this.data.key);
+
+    getValue:function () {
+        if (this.isRendered()) {
+            return this.component.getSubmitValue();
+        }
+
+        return this.data;
+    },
+
+
+    getLayoutShow: function () {
+
+        this.component = this.getLayoutEdit();
+        this.component.setReadOnly(true);
 
         return this.component;
     },
-
 
     getGridColumnFilter: function(field) {
         return {type: 'string', dataIndex: field.key};
@@ -143,100 +135,11 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     },
 
     getGridColumnConfigStatic: function(field) {
-        console.log("getGridColumnConfigStatic");
 
-        var renderer = function (key, value, metaData, record) {
-            this.applyPermissionStyle(key, value, metaData, record);
-
-            if (record.data.inheritedFields && record.data.inheritedFields[key] && record.data.inheritedFields[key].inherited == true) {
-                try {
-                    metaData.tdCls += " grid_value_inherited";
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-
-            if (value) {
-                try{
-                    var obj_value = JSON.parse(value);
-                    return obj_value.key;
-
-                }catch (e){
-                    return replace_html_event_attributes(strip_tags(value, 'div,span,b,strong,em,i,small,sup,sub'))
-                }
-
-            }
-        }.bind(this, field.key);
-
-        return {
-            text: t(field.label),
-            sortable: true,
-            dataIndex: field.key,
-            renderer: renderer,
-            editor: this.getGridColumnEditor(field)
-        };
     },
 
     getGridColumnEditor: function(field) {
-        console.log("select:getGridColumnEditor");
-        console.log(field);
 
-        if(field.layout.noteditable) {
-            return null;
-        }
-
-        var store = new Ext.data.JsonStore({
-            proxy: {
-                type: 'ajax',
-                url: '/admin/remote-fields/store-data',
-                extraParams : {
-                    "url" : field.layout.remoteStorageUrl
-                },
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                }
-            },
-            fields: ["key", "value"],
-            autoLoad: false
-        });
-
-        var editorConfig = {
-            store: store,
-            triggerAction: "all",
-            editable: true,
-            queryMode: 'remote',
-            anyMatch: true,
-            autoComplete: true,
-            forceSelection: true,
-            selectOnFocus: true,
-            typeAhead: true,
-
-            valueField: 'value',
-            displayField: 'key',
-
-            value: "",
-
-            displayTpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">',
-                '{[Ext.util.Format.stripTags(values.key)]}',
-                '</tpl>'
-            )
-
-        };
-
-        if (field.config) {
-            if (field.config.width) {
-                if (intval(field.config.width) > 10) {
-                    editorConfig.width = field.config.width;
-                }
-            }
-        }
-
-        this.component = new Ext.form.ComboBox(editorConfig);
-        this.component.setRawValue("field.value.value");
-
-        return this.component;
     },
 
 

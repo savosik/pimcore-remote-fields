@@ -24,6 +24,7 @@ class RemoteSelect extends ClassDefinition\Data\Select{
 
     public function getDataForGrid($data, $object = null, $params = [])
     {
+
         return $data;
     }
 }
