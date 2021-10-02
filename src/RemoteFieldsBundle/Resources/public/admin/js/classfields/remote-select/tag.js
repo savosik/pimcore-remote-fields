@@ -5,10 +5,13 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
 
     initialize: function (data, fieldConfig) {
-        console.log('remoteselect:init');
         this.data = data;
         this.fieldConfig = fieldConfig;
     },
+
+    
+
+    /* not realised now */
 
     getGridColumnConfigDynamic: function(field) {
         var renderer = function (key, data, metaData, record) {
@@ -211,6 +214,10 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         }
     },
 
+
+
+    /* well realised next */
+
     getLayoutEdit: function () {
 
 
@@ -308,7 +315,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         return this.component;
     },
 
-
     getLayoutShow: function () {
 
         this.component = this.getLayoutEdit();
@@ -323,7 +329,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         }
         return this.data;
     },
-
 
     getName: function () {
         return this.fieldConfig.name;
@@ -354,7 +359,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
         return false;
     },
-
 
     applyDefaultValue: function() {
         this.defaultValue = null;
