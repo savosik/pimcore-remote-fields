@@ -12,89 +12,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
 
     /* not realised now */
-
-    getGridColumnConfigDynamic: function(field) {
-        var renderer = function (key, data, metaData, record) {
-            var value = data;
-            var options = record.data[key + "%options"];
-
-            if (data && typeof data.options !== "undefined") {
-                options = data.options;
-                value = data.value;
-            }
-
-            this.applyPermissionStyle(key, value, metaData, record);
-
-            if (record.data.inheritedFields[key] && record.data.inheritedFields[key].inherited == true) {
-                try {
-                    metaData.tdCls += " grid_value_inherited";
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-
-            if (options) {
-                for (var i = 0; i < options.length; i++) {
-                    if (options[i]["value"] == value) {
-                        return replace_html_event_attributes(strip_tags(options[i]["key"], 'div,span,b,strong,em,i,small,sup,sub'));
-                    }
-                }
-            }
-
-            if (value) {
-                return replace_html_event_attributes(strip_tags(value, 'div,span,b,strong,em,i,small,sup,sub'));
-            }
-        }.bind(this, field.key);
-
-        return {
-            text: t(field.label),
-            sortable:true,
-            dataIndex:field.key,
-            renderer: renderer,
-            getEditor:this.getCellEditor.bind(this, field)
-        };
-    },
-
-    getGridColumnConfigStatic: function(field) {
-        var renderer = function (key, value, metaData, record) {
-            this.applyPermissionStyle(key, value, metaData, record);
-
-            if (record.data.inheritedFields && record.data.inheritedFields[key] && record.data.inheritedFields[key].inherited == true) {
-                try {
-                    metaData.tdCls += " grid_value_inherited";
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-
-            for(var i=0; i < field.layout.options.length; i++) {
-                if(field.layout.options[i]["value"] == value) {
-                    return replace_html_event_attributes(strip_tags(field.layout.options[i]["key"], 'div,span,b,strong,em,i,small,sup,sub'));
-                }
-            }
-
-            if (value) {
-                return replace_html_event_attributes(strip_tags(value, 'div,span,b,strong,em,i,small,sup,sub'));
-            }
-        }.bind(this, field.key);
-
-        return {
-            text: t(field.label),
-            sortable: true,
-            dataIndex: field.key,
-            renderer: renderer,
-            editor: this.getGridColumnEditor(field)
-        };
-    },
-
-    getGridColumnConfig:function (field) {
-        if (field.layout.optionsProviderClass) {
-            return this.getGridColumnConfigDynamic(field);
-        } else {
-            return this.getGridColumnConfigStatic(field);
-        }
-    },
-
     getCellEditor: function (field, record) {
         var key = field.key;
         if(field.layout.noteditable) {
@@ -138,7 +55,22 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
         return new Ext.form.ComboBox(editorConfig);
     },
+    prepareStoreDataAndFilterLabels: function(options) {
+        var filteredStoreData = [];
+        if (options) {
+            for (var i = 0; i < options.length; i++) {
 
+                var label = t(options[i].key);
+                if(label.indexOf('<') >= 0) {
+                    label = replace_html_event_attributes(strip_tags(label, "div,span,b,strong,em,i,small,sup,sub2"));
+                }
+
+                filteredStoreData.push({'value': options[i].value, 'key': label});
+            }
+        }
+
+        return filteredStoreData;
+    },
     getGridColumnEditor: function(field) {
         if(field.layout.noteditable) {
             return null;
@@ -177,24 +109,47 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
         return new Ext.form.ComboBox(editorConfig);
     },
+    getGridColumnConfig: function(field) {
+        var renderer = function (key, data, metaData, record) {
+            var value = data;
+            var options = record.data[key + "%options"];
 
-    prepareStoreDataAndFilterLabels: function(options) {
-        var filteredStoreData = [];
-        if (options) {
-            for (var i = 0; i < options.length; i++) {
-
-                var label = t(options[i].key);
-                if(label.indexOf('<') >= 0) {
-                    label = replace_html_event_attributes(strip_tags(label, "div,span,b,strong,em,i,small,sup,sub2"));
-                }
-
-                filteredStoreData.push({'value': options[i].value, 'key': label});
+            if (data && typeof data.options !== "undefined") {
+                options = data.options;
+                value = data.value;
             }
-        }
 
-        return filteredStoreData;
+            this.applyPermissionStyle(key, value, metaData, record);
+
+            if (record.data.inheritedFields[key] && record.data.inheritedFields[key].inherited == true) {
+                try {
+                    metaData.tdCls += " grid_value_inherited";
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+
+            if (options) {
+                for (var i = 0; i < options.length; i++) {
+                    if (options[i]["value"] == value) {
+                        return replace_html_event_attributes(strip_tags(options[i]["key"], 'div,span,b,strong,em,i,small,sup,sub'));
+                    }
+                }
+            }
+
+            if (value) {
+                return replace_html_event_attributes(strip_tags(value, 'div,span,b,strong,em,i,small,sup,sub'));
+            }
+        }.bind(this, field.key);
+
+        return {
+            text: t(field.label),
+            sortable:true,
+            dataIndex:field.key,
+            renderer: renderer,
+            getEditor:this.getCellEditor.bind(this, field)
+        };
     },
-
     getGridColumnFilter: function(field) {
         if (field.layout.dynamicOptions) {
             return {type: 'string', dataIndex: field.key};
