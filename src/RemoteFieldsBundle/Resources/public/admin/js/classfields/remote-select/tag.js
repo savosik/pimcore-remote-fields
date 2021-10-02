@@ -159,6 +159,9 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             console.log("what is record:");
             console.log(record);
 
+            console.log("what is value");
+            console.log(value);
+
             if (value) {
                 try{
                     var obj_value = JSON.parse(value);
@@ -233,22 +236,20 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             ),
             getValue: function (){
                 console.log("getValue from cellEditor");
-                if (this.isRendered()) {
 
-                    var valueToSave = null;
+                var valueToSave = null;
 
-                    if(this.getRawValue() !== "" && this.getValue() !== ""){
-                        valueToSave = {
-                            key   : this.getRawValue(),
-                            value : this.getValue()
-                        }
-
-                        valueToSave =  JSON.stringify(valueToSave);
+                if(this.getRawValue() !== "" && this.getValue() !== ""){
+                    valueToSave = {
+                        key   : this.getRawValue(),
+                        value : this.getValue()
                     }
-                    console.log(valueToSave);
 
-                    return  valueToSave;
+                    valueToSave =  JSON.stringify(valueToSave);
                 }
+                console.log(valueToSave);
+
+                return  valueToSave;
             }
 
         };
