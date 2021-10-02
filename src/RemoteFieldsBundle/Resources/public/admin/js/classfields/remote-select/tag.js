@@ -175,7 +175,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 type: 'ajax',
                 url: '/admin/remote-fields/store-data',
                 extraParams : {
-                    "url" : this.fieldConfig.remoteStorageUrl
+                    "url" : "" // todo: add this extra params
                 },
                 reader: {
                     type: 'json',
