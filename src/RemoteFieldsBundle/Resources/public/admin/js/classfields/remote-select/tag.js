@@ -9,7 +9,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         this.fieldConfig = fieldConfig;
     },
 
-    
+
 
     /* not realised now */
 
