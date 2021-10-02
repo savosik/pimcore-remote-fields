@@ -4,7 +4,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     type: "remoteSelect",
 
     initialize: function (data, fieldConfig) {
-        console.log("remoteSelect:initialize");
+
         if (data) {
             this.data = JSON.parse(data);
         }else{
@@ -46,7 +46,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     // next render component for different layouts
 
     getLayoutShow: function () {
-        console.log("remoteSelect:getLayoutShow");
 
         this.component = this.getLayoutEdit();
         this.component.setReadOnly(true);
