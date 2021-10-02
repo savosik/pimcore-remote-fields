@@ -175,7 +175,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 type: 'ajax',
                 url: '/admin/remote-fields/store-data',
                 extraParams : {
-                    "url" : "" // todo: add this extra params
+                    "url" : field.layout.remoteStorageUrl
                 },
                 reader: {
                     type: 'json',
@@ -183,7 +183,8 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 }
             },
             fields: ["key", "value"],
-            autoLoad: false
+            autoLoad: false,
+            autoDestroy: true
         });
 
         var editorConfig = {
@@ -199,8 +200,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
             valueField: 'value',
             displayField: 'key',
-
-            value: "",
 
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">',
