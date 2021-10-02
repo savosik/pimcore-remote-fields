@@ -67,16 +67,14 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             selectOnFocus: true,
             displayField: 'key',
             valueField: 'value',
-            value: dbValueObj.value || null,
+            value: dbValueObj.value,
             componentCls: "object_field object_field_type_" + this.type,
 
             queryMode: 'local',
             store: localStore,
             listeners:{
-                beforequery: function(qe){
-                    delete qe.combo.lastQuery;
-                },
                 focus: function(element, event, eOpts){
+                    console.log('focus');
                     element.queryMode = 'remote';
                     remoteStore.load();
                     element.store.add(remoteStore);
@@ -141,6 +139,32 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     getGridColumnEditor: function(field) {
 
     },
+
+    isDirty:function () {
+        var dirty = false;
+
+        if(this.defaultValue) {
+            return true;
+        }
+
+        if (this.component && typeof this.component.isDirty == "function") {
+            if (this.component.rendered) {
+                dirty = this.component.isDirty();
+
+                // once a field is dirty it should be always dirty (not an ExtJS behavior)
+                if (this.component["__pimcore_dirty"]) {
+                    dirty = true;
+                }
+                if (dirty) {
+                    this.component["__pimcore_dirty"] = true;
+                }
+
+                return dirty;
+            }
+        }
+
+        return false;
+    }
 
 
 
