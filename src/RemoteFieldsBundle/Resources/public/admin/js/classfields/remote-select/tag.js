@@ -156,27 +156,15 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 }
             }
 
-            console.log("what is record:");
-            console.log(record);
-
-            console.log("what is value");
-            console.log(value);
-
             if (value) {
                 try{
                     var obj_value = JSON.parse(value);
-
-                    field.value = obj_value;
-
                     return obj_value.key;
 
                 }catch (e){
-                    var clean_value = replace_html_event_attributes(strip_tags(value, 'div,span,b,strong,em,i,small,sup,sub'));
-
-                    field.value = {key:clean_value, value: ''};
-
-                    return clean_value
+                    return replace_html_event_attributes(strip_tags(value, 'div,span,b,strong,em,i,small,sup,sub'))
                 }
+
             }
         }.bind(this, field.key);
 
@@ -263,7 +251,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         }
 
         this.component = new Ext.form.ComboBox(editorConfig);
-        this.component.setRawValue(field.value.value);
+        this.component.setRawValue("field.value.value");
 
         return this.component;
     },
