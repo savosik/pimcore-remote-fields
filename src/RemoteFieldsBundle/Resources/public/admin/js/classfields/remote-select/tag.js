@@ -6,7 +6,12 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     initialize: function (data, fieldConfig) {
 
         if (data) {
-            this.data = JSON.parse(data);
+            try{
+                this.data = JSON.parse(data);
+            }catch (e){
+                this.data = data;
+                colsole.log('data is not json');
+            }
         }else{
             this.data = {
                 key   : '',
