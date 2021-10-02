@@ -23,6 +23,8 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
     getValue: function () {
 
+        console.log("remote:getValue");
+
         if (this.isRendered()) {
 
             var valueToSave = null;
