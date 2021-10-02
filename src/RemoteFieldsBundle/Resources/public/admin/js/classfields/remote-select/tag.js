@@ -218,7 +218,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             }
         }
 
-        this.component = new Ext.form.ComboBox(options);
+        this.component = new Ext.form.ComboBox(editorConfig);
 
         return this.component;
     },
