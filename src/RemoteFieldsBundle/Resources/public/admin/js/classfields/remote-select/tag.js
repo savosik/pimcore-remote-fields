@@ -35,13 +35,11 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
 
         var localStore = Ext.create('Ext.data.Store', {
-            autoDestroy:true,
             fields: ['value', 'key'],
             data : localData
         });
 
         var remoteStore = new Ext.data.JsonStore({
-            autoDestroy:true,
             proxy: {
                 type: 'ajax',
                 url: '/admin/remote-fields/store-data',
@@ -54,7 +52,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 }
             },
             fields: ["key", "value"],
-            autoLoad: false
+            autoLoad: true
         });
 
 
@@ -76,7 +74,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 focus: function(element, event, eOpts){
                     console.log('focus');
                     element.queryMode = 'remote';
-                    remoteStore.load();
                     element.store.add(remoteStore);
                 }
             },
