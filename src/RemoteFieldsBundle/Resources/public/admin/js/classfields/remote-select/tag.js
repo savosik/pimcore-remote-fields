@@ -17,7 +17,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     getLayoutEdit: function () {
 
         //we accept only json values from db
-        var dbValueObj = null;
+        var dbValueObj = {key:'',value:''};
         try{
             dbValueObj = JSON.parse(this.data);
         }catch (e) {}
@@ -29,7 +29,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         if(!this.fieldConfig.mandatory) {
             localData.push({'key': "(" + t("empty") + ")", 'value': ''});
         }
-        if(dbValueObj){
+        if(dbValueObj.value !== ''){
             localData.push(dbValueObj);
         }
 
