@@ -221,24 +221,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 '<tpl for=".">',
                 '{[Ext.util.Format.stripTags(values.key)]}',
                 '</tpl>'
-            ),
-            getValue: function (){
-                console.log("getValue from cellEditor");
-
-                var valueToSave = null;
-
-                if(this.getRawValue() !== "" && this.getValue() !== ""){
-                    valueToSave = {
-                        key   : this.getRawValue(),
-                        value : this.getValue()
-                    }
-
-                    valueToSave =  JSON.stringify(valueToSave);
-                }
-                console.log(valueToSave);
-
-                return  valueToSave;
-            }
+            )
 
         };
 
