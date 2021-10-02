@@ -156,6 +156,9 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 }
             }
 
+            console.log("what is record:");
+            console.log(record);
+
             if (value) {
                 try{
                     var obj_value = JSON.parse(value);
