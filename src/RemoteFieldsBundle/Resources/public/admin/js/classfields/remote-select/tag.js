@@ -200,7 +200,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             valueField: 'value',
             displayField: 'key',
 
-            value: this.data.value,
+            value: "",
 
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">',
