@@ -212,14 +212,13 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     },
 
     getLayoutEdit: function () {
-        console.log("remote:getLayoutEdit")
+
 
         var localData = [];
 
         //we accept only json values from db
         var dbValueObj = {key:'',value:''};
 
-        console.log(this.data);
 
         if(this.data){
             try{
@@ -265,7 +264,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             editable: true,
             queryMode: 'local',
             anyMatch: true,
-            autoComplete: false,
+            autoComplete: true,
             forceSelection: true,
             selectOnFocus: true,
             fieldLabel: this.fieldConfig.title,
@@ -277,15 +276,10 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             labelWidth: 100,
             value: dbValueObj.value,
             getSubmitValue: function (){
-                var me = this;
-                var key = me.getRawValue();
-                var value = me.getValue();
-
-                return JSON.stringify({key:key,value:value})
+                return JSON.stringify({key:this.getRawValue(),value:this.getValue()})
             },
             listeners:{
                 focus: function(element, event, eOpts){
-                    console.log('focus');
                     element.queryMode = 'remote';
                     element.bindStore(remoteStore);
                 }
@@ -309,7 +303,6 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             options.width = this.sumWidths(options.width, options.labelWidth);
         }
 
-
         this.component = new Ext.form.ComboBox(options);
 
         return this.component;
@@ -325,12 +318,9 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     },
 
     getValue:function () {
-        console.log('remote:getValue');
         if (this.isRendered()) {
-            console.log(this.component.getSubmitValue());
             return this.component.getSubmitValue();
         }
-
         return this.data;
     },
 
@@ -365,13 +355,9 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         return false;
     },
 
-    applyDefaultValue: function() {
 
+    applyDefaultValue: function() {
         this.defaultValue = null;
-        if ((typeof this.data === "undefined" || this.data === null) && this.fieldConfig.defaultValue) {
-            this.data = this.fieldConfig.defaultValue;
-            this.defaultValue = this.data;
-        }
     }
 
 });
