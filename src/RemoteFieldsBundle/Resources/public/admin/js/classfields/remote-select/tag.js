@@ -150,6 +150,9 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             }
 
             if (value) {
+                console.log("renderer value:");
+                console.log(value);
+
                 return replace_html_event_attributes(strip_tags(value, 'div,span,b,strong,em,i,small,sup,sub'));
             }
         }.bind(this, field.key);
