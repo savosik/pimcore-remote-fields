@@ -157,10 +157,20 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             }
 
             if (value) {
-                console.log("renderer value:");
-                console.log(value);
+                try{
+                    var obj_value = JSON.parse(value);
 
-                return replace_html_event_attributes(strip_tags(value, 'div,span,b,strong,em,i,small,sup,sub'));
+                    field.append('value', obj_value);
+
+                    return obj_value.key;
+
+                }catch (e){
+                    var clean_value = replace_html_event_attributes(strip_tags(value, 'div,span,b,strong,em,i,small,sup,sub'));
+
+                    field.append('value', {key:clean_value, value: ''})
+
+                    return clean_value
+                }
             }
         }.bind(this, field.key);
 
@@ -186,7 +196,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 type: 'ajax',
                 url: '/admin/remote-fields/store-data',
                 extraParams : {
-                    "url" : "" // todo: add this extra params
+                    "url" : field.layout.remoteStorageUrl
                 },
                 reader: {
                     type: 'json',
@@ -211,13 +221,32 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             valueField: 'value',
             displayField: 'key',
 
-            value: "",
+            value: field.value.value,
 
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">',
                 '{[Ext.util.Format.stripTags(values.key)]}',
                 '</tpl>'
-            )
+            ),
+            getValue: function (){
+                console.log("getValue from cellEditor");
+                if (this.isRendered()) {
+
+                    var valueToSave = null;
+
+                    if(this.getRawValue() !== "" && this.getValue() !== ""){
+                        valueToSave = {
+                            key   : this.getRawValue(),
+                            value : this.getValue()
+                        }
+
+                        valueToSave =  JSON.stringify(valueToSave);
+                    }
+                    console.log(valueToSave);
+
+                    return  valueToSave;
+                }
+            }
 
         };
 
@@ -230,6 +259,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
         }
 
         this.component = new Ext.form.ComboBox(editorConfig);
+        this.component.setRawValue(field.value.value);
 
         return this.component;
     },
