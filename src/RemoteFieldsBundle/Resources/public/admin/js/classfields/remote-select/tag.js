@@ -160,14 +160,14 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 try{
                     var obj_value = JSON.parse(value);
 
-                    field.append('value', obj_value);
+                    field.value = obj_value;
 
                     return obj_value.key;
 
                 }catch (e){
                     var clean_value = replace_html_event_attributes(strip_tags(value, 'div,span,b,strong,em,i,small,sup,sub'));
 
-                    field.append('value', {key:clean_value, value: ''})
+                    field.value = {key:clean_value, value: ''};
 
                     return clean_value
                 }
