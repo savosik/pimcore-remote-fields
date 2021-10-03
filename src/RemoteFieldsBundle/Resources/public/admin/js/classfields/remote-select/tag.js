@@ -3,120 +3,110 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
     type: "remoteSelect",
 
-
     initialize: function (data, fieldConfig) {
         this.data = data;
         this.fieldConfig = fieldConfig;
     },
 
-
-
-    /* not realised now */
     getCellEditor: function (field, record) {
         var key = field.key;
         if(field.layout.noteditable) {
             return null;
         }
+        var cellValue = record.data[key];
 
-        var value = record.data[key];
-        var options = record.data[key +  "%options"];
-        options = this.prepareStoreDataAndFilterLabels(options);
+        var localData = [];
 
-        var store = new Ext.data.Store({
-            autoDestroy: true,
-            fields: ['key', 'value'],
-            data: options
-        });
+        var dbValueObj = {key:'',value:''};
 
-        var editorConfig = {};
-
-        if (field.config) {
-            if (field.config.width) {
-                if (intval(field.config.width) > 10) {
-                    editorConfig.width = field.config.width;
-                }
-            }
+        if(cellValue){
+            try{
+                dbValueObj = JSON.parse(cellValue);
+            }catch (e) {}
         }
 
-        editorConfig = Object.assign(editorConfig, {
-            store: store,
+        if(!field.layout.mandatory) {
+            localData.push({'key': "(" + t("empty") + ")", 'value': ''});
+        }
+        if(dbValueObj.value !== ''){
+            localData.push(dbValueObj);
+        }
+
+
+        var localStore = Ext.create('Ext.data.Store', {
+            fields: ['value', 'key'],
+            data : localData,
+            autoDestroy:true
+        });
+
+        var remoteStore = new Ext.data.JsonStore({
+            proxy: {
+                type: 'ajax',
+                url: '/admin/remote-fields/store-data',
+                extraParams : {
+                    "url" : field.layout.remoteStorageUrl
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
+            },
+            fields: ["key", "value"],
+            autoLoad: false,
+            autoDestroy:true
+        });
+
+
+        var options = {
             triggerAction: "all",
-            editable: false,
-            mode: "local",
-            valueField: 'value',
+            editable: true,
+            queryMode: 'local',
+            anyMatch: true,
+            autoComplete: true,
+            forceSelection: true,
+            selectOnFocus: true,
+            store: localStore,
             displayField: 'key',
-            value: value,
+            valueField: 'value',
+            value: dbValueObj.value,
+            getValue: function (){
+                return JSON.stringify({key:this.getRawValue(),value:this.value})
+            },
+            listeners:{
+                focus: function(element, event, eOpts){
+                    element.queryMode = 'remote';
+                    element.bindStore(remoteStore);
+                }
+            },
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">',
                 '{[Ext.util.Format.stripTags(values.key)]}',
                 '</tpl>'
             )
-        });
-
-        return new Ext.form.ComboBox(editorConfig);
-    },
-    prepareStoreDataAndFilterLabels: function(options) {
-        var filteredStoreData = [];
-        if (options) {
-            for (var i = 0; i < options.length; i++) {
-
-                var label = t(options[i].key);
-                if(label.indexOf('<') >= 0) {
-                    label = replace_html_event_attributes(strip_tags(label, "div,span,b,strong,em,i,small,sup,sub2"));
-                }
-
-                filteredStoreData.push({'value': options[i].value, 'key': label});
-            }
-        }
-
-        return filteredStoreData;
-    },
-    getGridColumnEditor: function(field) {
-        if(field.layout.noteditable) {
-            return null;
-        }
-
-        var storeData = this.prepareStoreDataAndFilterLabels(field.layout.options);
-        var store = new Ext.data.Store({
-            autoDestroy: true,
-            fields: ['key', 'value'],
-            data: storeData
-        });
-
-        var editorConfig = {};
+        };
 
         if (field.config) {
             if (field.config.width) {
                 if (intval(field.config.width) > 10) {
-                    editorConfig.width = field.config.width;
+                    options.width = field.config.width;
                 }
             }
         }
 
-        editorConfig = Object.assign(editorConfig, {
-            store: store,
-            triggerAction: "all",
-            editable: false,
-            mode: "local",
-            valueField: 'value',
-            displayField: 'key',
-            displayTpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">',
-                '{[Ext.util.Format.stripTags(values.key)]}',
-                '</tpl>'
-            )
-        });
 
-        return new Ext.form.ComboBox(editorConfig);
+        return new Ext.form.ComboBox(options);
     },
+
     getGridColumnConfig: function(field) {
-        var renderer = function (key, data, metaData, record) {
-            var value = data;
-            var options = record.data[key + "%options"];
 
-            if (data && typeof data.options !== "undefined") {
-                options = data.options;
-                value = data.value;
+        var renderer = function (key, data, metaData, record) {
+
+            var value = {key:'',value:''};
+
+            if(data){
+                try{
+                    value = JSON.parse(data);
+                }catch (e) {}
             }
 
             this.applyPermissionStyle(key, value, metaData, record);
@@ -129,17 +119,8 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
                 }
             }
 
-            if (options) {
-                for (var i = 0; i < options.length; i++) {
-                    if (options[i]["value"] == value) {
-                        return replace_html_event_attributes(strip_tags(options[i]["key"], 'div,span,b,strong,em,i,small,sup,sub'));
-                    }
-                }
-            }
+            return value.key;
 
-            if (value) {
-                return replace_html_event_attributes(strip_tags(value, 'div,span,b,strong,em,i,small,sup,sub'));
-            }
         }.bind(this, field.key);
 
         return {
@@ -150,31 +131,12 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             getEditor:this.getCellEditor.bind(this, field)
         };
     },
-    getGridColumnFilter: function(field) {
-        if (field.layout.dynamicOptions) {
-            return {type: 'string', dataIndex: field.key};
-        } else {
-            var store = Ext.create('Ext.data.JsonStore', {
-                fields: ['key', "value"],
-                data: this.prepareStoreDataAndFilterLabels(field.layout.options)
-            });
 
-            return {
-                type: 'list',
-                dataIndex: field.key,
-                labelField: "key",
-                idField: "value",
-                options: store
-            };
-        }
+    getGridColumnFilter: function(field) {
+        return {type: 'string', dataIndex: field.key};
     },
 
-
-
-    /* well realised next */
-
     getLayoutEdit: function () {
-
 
         var localData = [];
 
@@ -318,6 +280,5 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
     applyDefaultValue: function() {
         this.defaultValue = null;
     }
-
 });
 
