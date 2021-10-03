@@ -200,7 +200,11 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             labelWidth: 100,
             value: dbValueObj.value,
             getSubmitValue: function (){
-                return JSON.stringify({key:this.getRawValue(),value:this.getValue()})
+                if(this.getValue() && this.getRawValue()){
+                    return JSON.stringify({key:this.getRawValue(),value:this.getValue()})
+                }else{
+                    return null;
+                }
             },
             listeners:{
                 focus: function(element, event, eOpts){
