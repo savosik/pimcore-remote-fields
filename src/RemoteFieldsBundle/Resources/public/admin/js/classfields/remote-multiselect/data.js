@@ -16,25 +16,16 @@ pimcore.object.classes.data.remoteMultiSelect = Class.create(pimcore.object.clas
     },
 
     initialize: function (treeNode, initData) {
+
         this.type = "remoteMultiSelect";
 
         this.initData(initData);
 
-        this.treeNode = treeNode;
-        this.id = this.type + "_" + treeNode.id;
+        // overwrite default settings
+        this.availableSettingsFields = ["name", "title", "tooltip", "mandatory", "noteditable", "invisible",
+            "visibleGridView", "visibleSearch", "style"];
 
-        this.store = new Ext.data.JsonStore({
-            proxy: {
-                type: 'ajax',
-                url: '/admin/remote-fields/stores-list',
-                reader: {
-                    type: 'json',
-                    rootProperty: 'stores'
-                }
-            },
-            fields: ["url", "name"],
-            autoLoad: true
-        });
+        this.treeNode = treeNode;
 
     },
 
@@ -51,36 +42,32 @@ pimcore.object.classes.data.remoteMultiSelect = Class.create(pimcore.object.clas
     },
 
     getLayout: function ($super) {
+
         $super();
 
         this.specificPanel.removeAll();
-        var specificItems = this.getSpecificPanelItems(this.datax, false);
-        this.specificPanel.add(specificItems);
+
+        this.specificPanel.add([
+            {
+                xtype: "textfield",
+                fieldLabel: t("remote_storage_url"),
+                width: 600,
+                name: "remoteStorageUrl",
+                value: this.datax.remoteStorageUrl
+            }
+        ]);
 
         return this.layout;
     },
 
-    getSpecificPanelItems: function (datax, inEncryptedField) {
-        return [
-            new Ext.form.ComboBox({
-                typeAhead: true,
-                typeAheadDelay: 200,
-                triggerAction: 'all',
-                width: 600,
-                store: this.store,
-                valueField: 'url',
-                editable: true,
-                displayField: 'name',
-                fieldLabel: t('remote_storage'),
-                name: 'remoteStorage',
-                value: datax.remoteStorageUrl,
-                forceSelection:true
-            })
-        ]
+
+    applyData: function ($super) {
+        $super();
     },
 
 
     applySpecialData: function (source) {
+
         if (source.datax) {
             if (!this.datax) {
                 this.datax = {};

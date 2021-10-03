@@ -2,7 +2,6 @@
 namespace Savosik\RemoteFieldsBundle\Model\Object\Data;
 
 use Pimcore\Model\DataObject\ClassDefinition;
-use Pimcore\Logger;
 
 class RemoteSelect extends ClassDefinition\Data\Select{
 

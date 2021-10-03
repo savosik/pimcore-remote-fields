@@ -1,10 +1,10 @@
 <?php
 
 namespace Savosik\RemoteFieldsBundle\Model\Object\Data;
-use Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect;
+use Pimcore\Model\DataObject\ClassDefinition;
 
 
-class RemoteMultiSelect extends Multiselect{
+class RemoteMultiSelect extends ClassDefinition\Data\Multiselect{
 
     public $fieldtype = "remoteMultiSelect";
 
