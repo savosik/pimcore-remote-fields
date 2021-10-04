@@ -54,7 +54,14 @@ pimcore.object.classes.data.remoteMultiSelect = Class.create(pimcore.object.clas
                 width: 600,
                 name: "remoteStorageUrl",
                 value: this.datax.remoteStorageUrl
-            }
+            },
+            {
+                xtype: "numberfield",
+                fieldLabel: t("maximum_items"),
+                name: "maxItems",
+                value: this.datax.maxItems,
+                minValue: 0
+            },
         ]);
 
         return this.layout;
