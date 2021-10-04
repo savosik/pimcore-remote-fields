@@ -61,10 +61,12 @@ class RemoteMultiSelect extends ClassDefinition\Data\Multiselect{
         return $this->getDataForEditmode($data, $object, $params);
     }
 
+
     public function getDataFromEditmode($data, $object = null, $params = [])
     {
         return $data;
     }
+
 
     public function getForCsvExport($object, $params = [])
     {
