@@ -11,31 +11,30 @@
  * @license    http://www.pimcore.org/license     GPLv3 and PCL
  */
 
-pimcore.registerNS("pimcore.object.tags.remoteMultiSelect");
-pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstract, {
+pimcore.registerNS("pimcore.object.tags.remoteMultiselect");
+pimcore.object.tags.remoteMultiselect = Class.create(pimcore.object.tags.abstract, {
 
-    type: "remoteMultiSelect",
+    type: "remoteMultiselect",
     allowBatchAppend: true,
     allowBatchRemove: true,
 
     initialize: function (data, fieldConfig) {
         this.data = data;
         this.fieldConfig = fieldConfig;
-
     },
 
     getGridColumnConfig: function(field) {
 
-        var displayValues = {};
-        if (field.layout.options) {
-            for (var i = 0; i < field.layout.options.length; i++) {
-                displayValues[field.layout.options[i].value] = t(field.layout.options[i].key);
-            }
-        }
 
-        return {text: t(field.label), width: 150, sortable: false, dataIndex: field.key,
+        return {
+            text: t(field.label),
+            width: 150,
+            sortable: false,
+            dataIndex: field.key,
             getEditor:this.getWindowCellEditor.bind(this, field),
-            renderer: function (key, displayValues, value, metaData, record) {
+            renderer: function (key, value, metaData, record) {
+
+
                 try {
                     if(record.data.inheritedFields && record.data.inheritedFields[key] && record.data.inheritedFields[key].inherited == true) {
                         metaData.tdCls += " grid_value_inherited";
@@ -46,60 +45,53 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
 
                 if (value) {
 
-                    var singleValues = [];
-                    if(typeof value === 'string') {
-                        singleValues = value.split(',');
-                    } else {
-                        singleValues = value;
+                    var render_str = '';
+                    var objects_arr = [];
+
+                    try{
+                        objects_arr = JSON.parse("["+value+"]");
+                    }catch (e){}
+
+                    if(objects_arr.length > 0){
+                        var _tmp = [];
+
+                        objects_arr.forEach(function (item,i,array){
+                            _tmp.push(item.key);
+                        });
+                        render_str = _tmp.join(", ");
                     }
 
-                    var singleDisplayValues = [];
-                    for(var i = 0; i < singleValues.length; i++) {
-                        if(displayValues[singleValues[i]]) {
-                            singleDisplayValues.push(displayValues[singleValues[i]]);
-                        } else {
-                            singleDisplayValues.push(singleValues[i]);
-                        }
-                    }
 
-                    return replace_html_event_attributes(strip_tags(singleDisplayValues.join(", "), 'div,span,b,strong,em,i,small,sup,sub'));
+                    return replace_html_event_attributes(strip_tags(render_str, 'div,span,b,strong,em,i,small,sup,sub'));
                 } else {
                     return "";
                 }
-            }.bind(this, field.key, displayValues)};
+            }.bind(this, field.key)};
+
     },
+
+
+    /*  realised methods */
 
     getGridColumnFilter: function(field) {
-
-        var storeData = this.prepareStoreDataAndFilterLabels(field.layout);
-
-        var store = Ext.create('Ext.data.JsonStore', {
-            fields: ['id', 'text'],
-            data: storeData
-        });
-
-        return {
-            type: 'list',
-            dataIndex: field.key,
-            labelField: "text",
-            idField: "id",
-            options: store
-        };
+        return {type: 'string', dataIndex: field.key};
     },
 
-    prepareStoreDataAndFilterLabels: function(fieldConfig) {
+    prepareStoreDataAndFilterLabels: function(data) {
 
         var storeData = [];
 
-        if (fieldConfig.options) {
-            for (var i = 0; i < fieldConfig.options.length; i++) {
-                var value = fieldConfig.options[i].value;
-                var label = t(fieldConfig.options[i].key);
-                if(label.indexOf('<') >= 0) {
-                    label = replace_html_event_attributes(strip_tags(label, "div,span,b,strong,em,i,small,sup,sub2"));
+        if(data){
+            var dataitems = JSON.parse("["+data+"]");
+            for (var i = 0; i < dataitems.length; i++){
+                var value = dataitems[i].value;
+                var key = dataitems[i].key;
+                if(key.indexOf('<') >= 0){
+                    key = replace_html_event_attributes(strip_tags(key, "div,span,b,strong,em,i,small,sup,sub2"));
                 }
-                storeData.push({id: value, text: label});
+                storeData.push({key: key, value: value});
             }
+
         }
 
         return storeData;
@@ -111,17 +103,34 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
         // generate store
         var validValues = [];
         var hasHTMLContent = false;
-        var storeData = this.prepareStoreDataAndFilterLabels(this.fieldConfig);
+        var storeData = this.prepareStoreDataAndFilterLabels(this.data);
         for (var i = 0; i < storeData.length; i++) {
-            validValues.push(storeData[i].text);
-            if(storeData[i].text.indexOf('<') >= 0) {
+            validValues.push(storeData[i].value);
+            if(storeData[i].value.indexOf('<') >= 0) {
                 hasHTMLContent = true;
             }
         }
 
         var store = Ext.create('Ext.data.Store', {
-            fields: ['id', 'text'],
+            fields: ['key', 'value'],
             data: storeData
+        });
+
+        var remoteStore = new Ext.data.JsonStore({
+            proxy: {
+                type: 'ajax',
+                url: '/admin/remote-fields/store-data',
+                extraParams : {
+                    "url" : this.fieldConfig.remoteStorageUrl
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
+            },
+            fields: ["key", "value"],
+            autoLoad: false,
+            autoDestroy:true
         });
 
 
@@ -132,21 +141,40 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
             fieldLabel: this.fieldConfig.title,
             store: store,
             componentCls: "object_field object_field_type_" + this.type,
-            valueField: 'id',
+            displayField: 'key',
+            valueField: 'value',
             labelWidth: this.fieldConfig.labelWidth ? this.fieldConfig.labelWidth : 100,
             listeners: {
-                change : function  ( remoteMultiSelect , newValue , oldValue , eOpts ) {
-                    if (this.fieldConfig.maxItems && remoteMultiSelect.getValue().length > this.fieldConfig.maxItems) {
-                        // we need to set a timeout so setValue is applied when change event is totally finished
-                        // without this, remoteMultiSelect wont be updated visually with oldValue (but internal value will be oldValue)
-                        setTimeout(function(remoteMultiSelect, oldValue){
-                            remoteMultiSelect.setValue(oldValue);
-                        }, 100, remoteMultiSelect, oldValue);
+                change : function  ( remoteMultiselect , newValue , oldValue , eOpts ) {
+                    console.log('remoteMultiselect.getValue');
+                    console.log(remoteMultiselect.getValue());
 
+                    if (this.fieldConfig.maxItems && remoteMultiselect.getValue().length > this.fieldConfig.maxItems) {
                         Ext.Msg.alert(t("error"),t("limit_reached"));
                     }
                     return true;
-                }.bind(this)
+                }.bind(this),
+                focus: function(element, event, eOpts){
+                    element.queryMode = 'remote';
+                    element.bindStore(remoteStore);
+                }
+            },
+            getSubmitValue: function (){
+                var curr_values = this.getValue();
+                var curr_labels = this.getRawValue();
+                var result = [];
+                if(curr_values.length > 0){
+                    var labels = curr_labels.split(",");
+
+                    curr_values.forEach(function(item, i, arr){
+                        result.push(JSON.stringify({
+                            'key' : labels[i],
+                            'value' : item
+                        }));
+                    });
+                }
+                console.log(result);
+                return result;
             }
         };
 
@@ -166,28 +194,21 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
 
         if (this.fieldConfig.height) {
             options.height = this.fieldConfig.height;
-        } else if (this.fieldConfig.renderType != "tags") {
-            options.height = 100;
         }
 
         if (typeof this.data == "string" || typeof this.data == "number") {
-            options.value = this.data;
+            options.value = validValues.join(",");
         }
 
-        if (this.fieldConfig.renderType == "tags") {
-            options.queryMode = 'local';
-            options.editable = true;
-            if(hasHTMLContent) {
-                options.labelTpl = '{[Ext.util.Format.stripTags(values.text)]}';
-            }
-            this.component = Ext.create('Ext.form.field.Tag', options);
-        } else {
-            this.component = Ext.create('Ext.ux.form.remoteMultiSelect', options);
+        options.queryMode = 'local';
+        options.editable = true;
+        if(hasHTMLContent) {
+            options.labelTpl = '{[Ext.util.Format.stripTags(values.key)]}';
         }
+        this.component = Ext.create('Ext.form.field.Tag', options);
 
         return this.component;
     },
-
 
     getLayoutShow: function () {
 
@@ -197,13 +218,12 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
             this.component.disable();
         }.bind(this));
 
-
         return this.component;
     },
 
     getValue: function () {
         if(this.isRendered()) {
-            return this.component.getValue();
+            return this.component.getSubmitValue();
         }
 
         let res = [];
