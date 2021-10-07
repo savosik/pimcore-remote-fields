@@ -152,10 +152,10 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
             },
             getSubmitData: function (){
                 var submitData = {};
-                submitData = Ext.encode(this.lastSelection.map(function(record) {
+                submitData = this.lastSelection.map(function(record) {
                     // Process every selected record:
                     return record.getData();
-                }));
+                });
                 console.log(submitData)
                 return submitData;
             }
