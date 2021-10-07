@@ -20,7 +20,7 @@ class RemoteFieldsController extends AdminController{
 
         $client = new GuzzleClient();
 
-        $remote_url = $request->get("remote_url");
+        $remote_url = $request->get("url");
 
         $res = $client->request('GET', $remote_url, [
             'query' => [
