@@ -199,11 +199,12 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             valueField: 'value',
             labelWidth: 100,
             value: dbValueObj.value,
-            getSubmitData: function (){
-                var submitData = null;
-                submitData = Ext.encode(this.getData());
-                console.log(submitData);
-                return submitData;
+            getSubmitValue: function (){
+                if(this.getValue() && this.getRawValue()){
+                    return JSON.stringify({key:this.getRawValue(),value:this.getValue()})
+                }else{
+                    return null;
+                }
             },
             listeners:{
                 focus: function(element, event, eOpts){
@@ -245,7 +246,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
 
     getValue:function () {
         if (this.isRendered()) {
-            return this.component.getSubmitData();
+            return this.component.getSubmitValue();
         }
         return this.data;
     },
