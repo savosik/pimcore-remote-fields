@@ -134,16 +134,11 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
             labelWidth: this.fieldConfig.labelWidth ? this.fieldConfig.labelWidth : 100,
             listeners: {
                 change : function  ( remoteMultiselect , newValue , oldValue , eOpts ) {
-                    console.log('remoteMultiselect.getValue');
-                    console.log(newValue);
-                    console.log(oldValue);
-                    remoteMultiselect.doRawQuery();
-
                     if (this.fieldConfig.maxItems && remoteMultiselect.getValue().length > this.fieldConfig.maxItems) {
 
-                        setTimeout(function(multiselect, oldValue){
-                            multiselect.setValue(oldValue);
-                        }, 100, multiselect, oldValue);
+                        setTimeout(function(remoteMultiselect, oldValue){
+                            remoteMultiselect.setValue(oldValue);
+                        }, 100, remoteMultiselect, oldValue);
 
                         Ext.Msg.alert(t("error"),t("limit_reached"));
                     }
