@@ -33,19 +33,12 @@ class RemoteFieldsController extends AdminController{
         if($res->getStatusCode() == 200){
             $result =  $res->getBody();
 
-            if($this->isJson($result)){
-                /* we want same json {data:[{key: label, value: value},{key: label, value: value}]} */
-                $data = json_decode($result, TRUE);
-            }
+            /* we want same json {data:[{key: label, value: value},{key: label, value: value}]} */
+            $data = json_decode($result, TRUE);
+
         }
 
         return $this->adminJson($data);
-    }
-
-
-    private function isJson($string) {
-        json_decode($string);
-        return json_last_error() === JSON_ERROR_NONE;
     }
 
 }
