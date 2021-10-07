@@ -216,7 +216,7 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
 
         let res = [];
         if (this.data) {
-            res = this.data;
+            res = JSON.parse(this.data);
         }
 
         return res;
