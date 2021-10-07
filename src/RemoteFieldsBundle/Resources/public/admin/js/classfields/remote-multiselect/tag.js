@@ -155,10 +155,10 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
                     var labels = curr_labels.split(",");
 
                     curr_values.forEach(function(item, i, arr){
-                        result.push(JSON.stringify({
+                        result.push({
                             'key' : labels[i],
                             'value' : item
-                        }));
+                        });
                     });
                 }
                 console.log(result);
