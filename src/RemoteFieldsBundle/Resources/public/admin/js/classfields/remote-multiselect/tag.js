@@ -150,7 +150,7 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
                     element.bindStore(remoteStore);
                 }
             },
-            getValue: function (){
+            getSubmitValue: function (){
                 var curr_values = this.value;
                 var curr_labels = this.getRawValue();
                 var result = [];
@@ -214,7 +214,7 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
 
     getValue: function () {
         if(this.isRendered()) {
-            return this.component.getValue();
+            return this.component.getSubmitValue();
         }
 
         let res = null;
