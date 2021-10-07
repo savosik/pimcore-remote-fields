@@ -8,6 +8,7 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
     initialize: function (data, fieldConfig) {
         this.data = data;
         this.fieldConfig = fieldConfig;
+        console.log(this);
     },
 
     getGridColumnConfig: function(field) {
