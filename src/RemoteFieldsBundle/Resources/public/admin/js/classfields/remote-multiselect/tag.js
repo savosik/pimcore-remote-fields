@@ -150,7 +150,7 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
             getValue: function (){
                 var curr_values = this.value;
                 var curr_labels = this.getRawValue();
-                var result = [];
+                var result = null;
                 if(curr_values.length > 0){
                     var labels = curr_labels.split(",");
 
