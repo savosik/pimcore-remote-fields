@@ -151,7 +151,6 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
                 }
             },
             getSubmitValue: function (){
-                this.doRawValue();
                 var curr_values = this.value;
                 var curr_labels = this.getRawValue();
                 console.log("get:Labels");
