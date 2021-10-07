@@ -49,7 +49,7 @@ pimcore.object.tags.remoteMultiselect = Class.create(pimcore.object.tags.abstrac
                     var objects_arr = [];
 
                     try{
-                        objects_arr = JSON.parse("["+value+"]");
+                        objects_arr = JSON.parse(value);
                     }catch (e){}
 
                     if(objects_arr.length > 0){
@@ -82,7 +82,7 @@ pimcore.object.tags.remoteMultiselect = Class.create(pimcore.object.tags.abstrac
         var storeData = [];
 
         if(data){
-            var dataitems = JSON.parse("["+data+"]");
+            var dataitems = JSON.parse(data);
             for (var i = 0; i < dataitems.length; i++){
                 var value = dataitems[i].value;
                 var key = dataitems[i].key;
