@@ -6,6 +6,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+use GuzzleHttp\Client as GuzzleClient;
+
 /**
  * @Route("/admin/remote-fields")
  */
