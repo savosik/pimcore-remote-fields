@@ -8,7 +8,6 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
     initialize: function (data, fieldConfig) {
         this.data = data;
         this.fieldConfig = fieldConfig;
-        console.log(this);
     },
 
     getGridColumnConfig: function(field) {
@@ -71,7 +70,6 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
 
         if(data){
             var dataitems = JSON.parse(data);
-            console.log(dataitems);
             for (var i = 0; i < dataitems.length; i++){
                 var value = dataitems[i].value;
                 var key = dataitems[i].key;
@@ -156,7 +154,6 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
                     // Process every selected record:
                     return record.getData();
                 });
-                console.log(submitData)
                 return submitData;
             }
         };
