@@ -124,7 +124,7 @@ class RemoteMultiSelect extends ClassDefinition\Data\Multiselect{
     public function getDataFromEditmode($data, $object = null, $params = [])
     {
 
-        return json_encode(json_decode($data,TRUE));
+        return $data;
     }
 
     /**
