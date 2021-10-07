@@ -150,25 +150,14 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
                     element.bindStore(remoteStore);
                 }
             },
-            getSubmitValue: function (){
-                var curr_values = this.value;
-                var curr_labels = this.geDisplayValue();
-                console.log("get:Labels");
-                console.log(curr_labels);
-
-                var result = [];
-                if(curr_values.length > 0){
-                    var labels = curr_labels.split(",");
-
-                    curr_values.forEach(function(item, i, arr){
-                        result.push({
-                            'key' : labels[i],
-                            'value' : item
-                        });
-                    });
-                }
-                console.log(result);
-                return result;
+            getSubmitData: function (){
+                var submitData = {};
+                submitData = Ext.encode(this.lastSelection.map(function(record) {
+                    // Process every selected record:
+                    return record.getData();
+                }));
+                console.log(submitData)
+                return submitData;
             }
         };
 
@@ -217,7 +206,7 @@ pimcore.object.tags.remoteMultiSelect = Class.create(pimcore.object.tags.abstrac
 
     getValue: function () {
         if(this.isRendered()) {
-            return this.component.getSubmitValue();
+            return this.component.getSubmitData();
         }
 
         let res = null;
