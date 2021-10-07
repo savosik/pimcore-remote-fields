@@ -201,10 +201,7 @@ pimcore.object.tags.remoteSelect = Class.create(pimcore.object.tags.abstract, {
             value: dbValueObj.value,
             getSubmitData: function (){
                 var submitData = null;
-                submitData = Ext.encode(this.lastSelection.map(function(record) {
-                    // Process every selected record:
-                    return record.getData();
-                }));
+                submitData = Ext.encode(record.getData());
                 return submitData;
             },
             listeners:{
