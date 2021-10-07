@@ -2,8 +2,9 @@
 namespace Savosik\RemoteFieldsBundle\Controller\Admin;
 
 use Pimcore\Bundle\AdminBundle\Controller\AdminController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use GuzzleHttp\Client as GuzzleClient;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/admin/remote-fields")
